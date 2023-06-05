@@ -4,9 +4,9 @@
 class DeviceDriver
 {
 public:
-    DeviceDriver(FlashMemoryDevice* hardware);
-    int read(long address) const;
-    void write(long address, int data);
+	explicit DeviceDriver(FlashMemoryDevice* hardware);
+    int read(const long address) const;
+    void write(const long address, const int data) const;
 
 protected:
     FlashMemoryDevice* mHardware;
