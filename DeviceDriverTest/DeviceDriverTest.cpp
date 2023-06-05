@@ -1,6 +1,7 @@
 #include "gtest/gtest.h"
 #include "gmock/gmock.h"
 #include "../DeviceDriver/DeviceDriver.cpp"
+#include "../DeviceDriver/Application.cpp"
 
 using namespace testing;
 using namespace std;
@@ -52,4 +53,25 @@ TEST(DeviceDriverTest, WriteException)
 
 	const DeviceDriver deviceDriver(&flashMemoryDevice);
 	EXPECT_THROW(deviceDriver.write(0x00, 10), WriteFailException);
+}
+
+TEST(ApplicationTest, ReadAndPrint)
+{
+	FlashMemoryDeviceMock flashMemoryDevice{};
+	EXPECT_CALL(flashMemoryDevice, read).Times(25).WillRepeatedly(Return(0x10));
+
+	const DeviceDriver deviceDriver(&flashMemoryDevice);
+	const Application application(&deviceDriver);
+	application.readAndPrint(0x00, 0x4);
+}
+
+TEST(ApplicationTest, WriteAll)
+{
+	FlashMemoryDeviceMock flashMemoryDevice{};
+	EXPECT_CALL(flashMemoryDevice, read).Times(5).WillRepeatedly(Return(0xFF));
+	EXPECT_CALL(flashMemoryDevice, write).Times(5);
+
+	const DeviceDriver deviceDriver(&flashMemoryDevice);
+	const Application application(&deviceDriver);
+	application.writeAll(0x10);
 }
