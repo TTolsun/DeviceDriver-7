@@ -8,6 +8,6 @@
 class FlashMemoryDevice
 {
 public:
-    virtual unsigned char read(long address) = 0;
-    virtual void write(long address, unsigned char data) = 0;
+    virtual unsigned char read(const long address) = 0;
+    virtual void write(const long address, const unsigned char data) = 0;
 };
