@@ -34,3 +34,22 @@ TEST(DeviceDriverTest, ReadException)
 	const DeviceDriver deviceDriver(&flashMemoryDevice);
 	EXPECT_THROW(deviceDriver.read(0x00), ReadFailException);
 }
+
+TEST(DeviceDriverTest, Write)
+{
+	FlashMemoryDeviceMock flashMemoryDevice{};
+	EXPECT_CALL(flashMemoryDevice, read).Times(1).WillOnce(Return(0xFF));
+	EXPECT_CALL(flashMemoryDevice, write).Times(1);
+
+	const DeviceDriver deviceDriver(&flashMemoryDevice);
+	deviceDriver.write(0x00, 10);
+}
+
+TEST(DeviceDriverTest, WriteException)
+{
+	FlashMemoryDeviceMock flashMemoryDevice{};
+	EXPECT_CALL(flashMemoryDevice, read).Times(1).WillOnce(Return(0xFE));
+
+	const DeviceDriver deviceDriver(&flashMemoryDevice);
+	EXPECT_THROW(deviceDriver.write(0x00, 10), WriteFailException);
+}

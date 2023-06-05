@@ -7,7 +7,16 @@ using namespace std;
 class ReadFailException final : public std::exception
 {
 public:
-	ReadFailException(const long address) : exception()
+	explicit ReadFailException(const long address) : exception()
+	{
+		printf("%s: address(%ld), invalid value.", __FUNCTION__, address);
+	}
+};
+
+class WriteFailException final : public std::exception
+{
+public:
+	explicit WriteFailException(const long address) : exception()
 	{
 		printf("%s: address(%ld), invalid value.", __FUNCTION__, address);
 	}
@@ -30,8 +39,9 @@ int DeviceDriver::read(const long address) const
 	return value;
 }
 
-void DeviceDriver::write(long address, int data)
+void DeviceDriver::write(const long address, const int data) const
 {
-	// TODO: implement this method
+	if (mHardware->read(address) != 0xFF)
+		throw WriteFailException(address);
 	mHardware->write(address, static_cast<unsigned char>(data));
 }
